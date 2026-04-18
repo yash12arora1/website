@@ -165,7 +165,7 @@ video {
 }
 
 /* hidden by default on desktop */
-.mobile-tap-zone {
+.mobile-center-tap-zone {
   display: none;
 }
 
@@ -251,12 +251,13 @@ video {
     font-size: 1rem;
   }
 
-  .mobile-tap-zone {
+  /* sirf center safe area clickable hoga */
+  .mobile-center-tap-zone {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 56px;
+    top: 22%;
+    left: 24%;
+    width: 52%;
+    height: 40%;
     z-index: 4;
     display: flex;
     align-items: center;
@@ -265,13 +266,14 @@ video {
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     background: transparent;
+    border-radius: 999px;
   }
 
-  .mobile-tap-zone.is-paused {
-    background: rgba(0, 0, 0, 0.14);
+  .mobile-center-tap-zone.is-paused {
+    background: rgba(0, 0, 0, 0.06);
   }
 
-  .mobile-tap-zone.is-playing {
+  .mobile-center-tap-zone.is-playing {
     background: transparent;
   }
 
@@ -282,7 +284,7 @@ video {
     width: 92px;
     height: 92px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.08);
     border: 6px solid rgba(255, 255, 255, 0.72);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(2px);

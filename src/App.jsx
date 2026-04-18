@@ -19,6 +19,7 @@ const videos = [
 
 function App() {
   const videoRefs = useRef({});
+  const previewInitializedRef = useRef({});
   const [isMobile, setIsMobile] = useState(false);
   const [playingMap, setPlayingMap] = useState({});
 
@@ -46,6 +47,43 @@ function App() {
       ...prev,
       [id]: isPlaying,
     }));
+  };
+
+  const initializeMobilePreview = (id) => {
+    if (!isMobile) return;
+    if (previewInitializedRef.current[id]) return;
+
+    const video = videoRefs.current[id];
+    if (!video) return;
+
+    previewInitializedRef.current[id] = true;
+
+    try {
+      const forcePreviewFrame = () => {
+        try {
+          if (video.readyState >= 2) {
+            if (video.currentTime < 0.01) {
+              video.currentTime = 0.01;
+            }
+            video.pause();
+          }
+        } catch (error) {
+          console.error("Preview frame init failed:", error);
+        }
+      };
+
+      if (video.readyState >= 2) {
+        forcePreviewFrame();
+      } else {
+        const handleCanPlay = () => {
+          forcePreviewFrame();
+          video.removeEventListener("canplay", handleCanPlay);
+        };
+        video.addEventListener("canplay", handleCanPlay);
+      }
+    } catch (error) {
+      console.error("Mobile preview init failed:", error);
+    }
   };
 
   const toggleVideo = async (id) => {
@@ -92,9 +130,10 @@ function App() {
                     ref={(node) => setVideoRef(video.id, node)}
                     className="video-player"
                     controls
-                    preload="metadata"
+                    preload="auto"
                     playsInline
                     controlsList="nodownload"
+                    onLoadedData={() => initializeMobilePreview(video.id)}
                     onPlay={() => updatePlayingState(video.id, true)}
                     onPause={() => updatePlayingState(video.id, false)}
                     onEnded={() => updatePlayingState(video.id, false)}
@@ -106,7 +145,9 @@ function App() {
                   {isMobile && (
                     <button
                       type="button"
-                      className={`mobile-tap-zone ${isPlaying ? "is-playing" : "is-paused"}`}
+                      className={`mobile-center-tap-zone ${
+                        isPlaying ? "is-playing" : "is-paused"
+                      }`}
                       aria-label={`${isPlaying ? "Pause" : "Play"} ${video.title}`}
                       onClick={() => toggleVideo(video.id)}
                     >
