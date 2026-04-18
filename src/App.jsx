@@ -20,6 +20,7 @@ const videos = [
 function App() {
   const videoRefs = useRef({});
   const previewInitializedRef = useRef({});
+  const previewBootingRef = useRef({});
   const [isMobile, setIsMobile] = useState(false);
   const [playingMap, setPlayingMap] = useState({});
 
@@ -49,39 +50,54 @@ function App() {
     }));
   };
 
-  const initializeMobilePreview = (id) => {
+  const initializeMobilePreview = async (id) => {
     if (!isMobile) return;
     if (previewInitializedRef.current[id]) return;
+    if (previewBootingRef.current[id]) return;
 
     const video = videoRefs.current[id];
     if (!video) return;
 
-    previewInitializedRef.current[id] = true;
+    previewBootingRef.current[id] = true;
 
     try {
-      const forcePreviewFrame = () => {
+      if (video.readyState < 2) {
+        return;
+      }
+
+      const previousMuted = video.muted;
+      const previousVolume = video.volume;
+
+      video.muted = true;
+      video.volume = 0;
+
+      try {
+        await video.play();
+      } catch (error) {
+        // autoplay restrictions can fail on some devices
+      }
+
+      const finalizePreview = () => {
         try {
-          if (video.readyState >= 2) {
-            if (video.currentTime < 0.01) {
-              video.currentTime = 0.01;
-            }
-            video.pause();
+          if (video.currentTime < 0.01) {
+            video.currentTime = 0.01;
           }
+          video.pause();
+          video.muted = previousMuted;
+          video.volume = previousVolume;
+          previewInitializedRef.current[id] = true;
         } catch (error) {
-          console.error("Preview frame init failed:", error);
+          console.error("Preview finalize failed:", error);
+        } finally {
+          previewBootingRef.current[id] = false;
         }
       };
 
-      if (video.readyState >= 2) {
-        forcePreviewFrame();
-      } else {
-        const handleCanPlay = () => {
-          forcePreviewFrame();
-          video.removeEventListener("canplay", handleCanPlay);
-        };
-        video.addEventListener("canplay", handleCanPlay);
-      }
+      requestAnimationFrame(() => {
+        requestAnimationFrame(finalizePreview);
+      });
     } catch (error) {
+      previewBootingRef.current[id] = false;
       console.error("Mobile preview init failed:", error);
     }
   };
@@ -132,8 +148,10 @@ function App() {
                     controls
                     preload="auto"
                     playsInline
+                    muted={false}
                     controlsList="nodownload"
                     onLoadedData={() => initializeMobilePreview(video.id)}
+                    onCanPlay={() => initializeMobilePreview(video.id)}
                     onPlay={() => updatePlayingState(video.id, true)}
                     onPause={() => updatePlayingState(video.id, false)}
                     onEnded={() => updatePlayingState(video.id, false)}

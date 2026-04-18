@@ -251,7 +251,6 @@ video {
     font-size: 1rem;
   }
 
-  /* sirf center safe area clickable hoga */
   .mobile-center-tap-zone {
     position: absolute;
     top: 22%;
