@@ -2,19 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import "./index.css";
 
 const videos = [
-  { id: 1, title: "Teaser 1", src: "/videos/teaser 1.mp4" },
-  { id: 2, title: "Teaser 2", src: "/videos/teaser 2.mp4" },
-  { id: 3, title: "Teaser 3", src: "/videos/teaser 3.mp4" },
-  { id: 4, title: "Teaser 4", src: "/videos/teaser 4.mp4" },
-  { id: 5, title: "Teaser 5", src: "/videos/teaser 5.mp4" },
-  { id: 6, title: "Teaser 6", src: "/videos/teaser 6.mp4" },
-  { id: 7, title: "Teaser 7", src: "/videos/teaser 7.mp4" },
-  { id: 8, title: "Teaser 8", src: "/videos/teaser 8.mp4" },
-  { id: 9, title: "Teaser 9", src: "/videos/teaser 9.mp4" },
-  { id: 10, title: "Teaser 10", src: "/videos/teaser 10.mp4" },
-  { id: 11, title: "Teaser 11", src: "/videos/teaser 11.mp4" },
-  { id: 12, title: "Teaser 12", src: "/videos/teaser 12.mp4" },
-  { id: 13, title: "Teaser 13", src: "/videos/teaser 13.mp4" },
+  { id: 1, title: "Teaser 1", src: `${import.meta.env.BASE_URL}videos/teaser 1.mp4` },
+  { id: 2, title: "Teaser 2", src: `${import.meta.env.BASE_URL}videos/teaser 2.mp4` },
+  { id: 3, title: "Teaser 3", src: `${import.meta.env.BASE_URL}videos/teaser 3.mp4` },
+  { id: 4, title: "Teaser 4", src: `${import.meta.env.BASE_URL}videos/teaser 4.mp4` },
+  { id: 5, title: "Teaser 5", src: `${import.meta.env.BASE_URL}videos/teaser 5.mp4` },
+  { id: 6, title: "Teaser 6", src: `${import.meta.env.BASE_URL}videos/teaser 6.mp4` },
+  { id: 7, title: "Teaser 7", src: `${import.meta.env.BASE_URL}videos/teaser 7.mp4` },
+  { id: 8, title: "Teaser 8", src: `${import.meta.env.BASE_URL}videos/teaser 8.mp4` },
+  { id: 9, title: "Teaser 9", src: `${import.meta.env.BASE_URL}videos/teaser 9.mp4` },
+  { id: 10, title: "Teaser 10", src: `${import.meta.env.BASE_URL}videos/teaser 10.mp4` },
+  { id: 11, title: "Teaser 11", src: `${import.meta.env.BASE_URL}videos/teaser 11.mp4` },
+  { id: 12, title: "Teaser 12", src: `${import.meta.env.BASE_URL}videos/teaser 12.mp4` },
+  { id: 13, title: "Teaser 13", src: `${import.meta.env.BASE_URL}videos/teaser 13.mp4` },
 ];
 
 function App() {
